@@ -1,0 +1,34 @@
+execution:
+  - executor: jmeter
+    concurrency: 20
+    ramp-up: 30s
+    hold-for: 1m
+    scenario: load-scenario
+
+  - executor: jmeter
+    concurrency: 1
+    iterations: 1
+    scenario: functional-scenario
+
+scenarios:
+  load-scenario:
+    think-time: 0.75
+    requests:
+      - url: http://blazedemo.com/
+        label: "[PERF] Homepage Load"
+      - url: http://blazedemo.com/vacation.html
+        label: "[PERF] Vacation Page Load"
+
+  functional-scenario:
+    requests:
+      - url: http://blazedemo.com/reserve.php
+        label: "[FUNC] Reserve Page Assertion"
+        assert:
+          - contains:
+            - 200
+            subject: http-code
+            not: false
+
+modules:
+  console:
+    disable: true
