@@ -1,0 +1,22 @@
+---
+execution:
+  - concurrency: 100
+    ramp-up: 1m
+    hold-for: 3m
+    scenario: mygov_homepage_test
+
+scenarios:
+  mygov_homepage_test:
+    default-address: https://www.malaysia.gov.my
+    requests:
+      - url: /en
+        method: GET
+        label: homepage
+
+reporting:
+  - module: passfail
+    criteria:
+      # The 90th percentile response time must remain under 2000 milliseconds
+      - p90>2000ms, stop as failed
+      # The HTTP error rate must remain at 0%
+      - fail>0%, stop as failed
